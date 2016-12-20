@@ -12,7 +12,7 @@ def main():
         value = SA.Column(SA.Integer)
 
         def __repr__(self):
-            return(self.value)
+            return(':{}'.format(self.value))
 
     class Limit(Base):
         __tablename__ = 'limits'
@@ -22,7 +22,7 @@ def main():
         sensor = relationship('Sensor', back_populates='limits')
 
         def __repr__(self):
-            return(self.value)
+            return(':{}'.format(self.value))
 
     Sensor.limits = relationship('Limit', order_by=Limit.id, back_populates='sensor')
     """sensors = SA.Table('sensors',
@@ -40,16 +40,18 @@ def main():
 
     sensor_1 = Sensor(value=42)
     sensor_2 = Sensor(value=43)
+    sensor_1.limits = [
+            Limit(value=23),
+            Limit(value=84)
+            ]
 
-    limit_1 = Limit(value=24, sensor_id=1)
-    limit_2 = Limit(value=25, sensor_id=1)
 
     conn = engine.connect()
 
     Session = SA.orm.sessionmaker()
     Session.configure(bind=engine)
     session = Session()
-    session.add_all([sensor_1, sensor_2, limit_1, limit_2])
+    session.add_all([sensor_1, sensor_2])
 
     pdb.set_trace()
 
