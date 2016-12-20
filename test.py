@@ -1,5 +1,6 @@
 import sqlalchemy as SA
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 import pdb
 
 
@@ -18,10 +19,12 @@ def main():
         id = SA.Column(SA.Integer, primary_key=True)
         value = SA.Column(SA.Integer)
         sensor_id = SA.Column(None, SA.ForeignKey('sensors.id'))
+        sensor = relationship('Sensor', back_populates='limits')
 
         def __repr__(self):
             return(self.value)
 
+    Sensor.limits = relationship('Limit', order_by=Limit.id, back_populates='sensor')
     """sensors = SA.Table('sensors',
             metadata,
             SA.Column('id', SA.Integer, primary_key=True),
