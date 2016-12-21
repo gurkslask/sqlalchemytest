@@ -2,6 +2,7 @@ import sqlalchemy as SA
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import pdb
+from time import time
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
         __tablename__ = 'histories'
         id = SA.Column(SA.Integer, primary_key=True)
         value = SA.Column(SA.Integer)
-        timestamp = SA.Column(SA.DateTime, server_default=SA.utcnow())
+        timestamp = SA.Column(SA.Integer)
         sensor_id = SA.Column(None, SA.ForeignKey('sensors.id'))
         sensor = relationship('Sensor', back_populates='histories')
 
@@ -58,7 +59,7 @@ def main():
             Limit(value=48),
             Limit(value=49)
             ]
-    sensor_1.histories = [History(value=42)]
+    sensor_1.histories = [History(value=42, timestamp=time())]
 
     conn = engine.connect()
 
